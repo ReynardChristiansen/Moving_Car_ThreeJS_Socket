@@ -92,22 +92,28 @@ function animate() {
     let newX = car.position.x;
     let newZ = car.position.z;
 
-    if (keys.w) {
+    // Prevent movement if both W and S are pressed
+    const movingForward = keys.w && !keys.s;
+    const movingBackward = keys.s && !keys.w;
+
+    if (movingForward) {
       newX += Math.sin(car.rotation.y) * speed;
       newZ += Math.cos(car.rotation.y) * speed;
       moved = true;
     }
-    if (keys.s) {
+    if (movingBackward) {
       newX -= Math.sin(car.rotation.y) * speed;
       newZ -= Math.cos(car.rotation.y) * speed;
       moved = true;
     }
-    if (keys.w || keys.s) {
+
+    // **Only rotate if moving forward or backward**
+    if (movingForward || movingBackward) {
       if (keys.a) {
-        car.rotation.y += rotationSpeed;
+        car.rotation.y += movingForward ? rotationSpeed : -rotationSpeed; // Normal or reversed rotation
       }
       if (keys.d) {
-        car.rotation.y -= rotationSpeed;
+        car.rotation.y -= movingForward ? rotationSpeed : -rotationSpeed; // Normal or reversed rotation
       }
     }
 
